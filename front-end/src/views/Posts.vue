@@ -10,7 +10,7 @@
         <hr v-if="comment._id === commentsList[0]._id">
         <p id="comment-body">{{comment.comment}}</p>
         <div id="date-delete">
-          <p>Posted by {{comment.user}} at {{comment.date}}.</p>
+          <p>Posted by {{comment.user}} at {{comment.datePosted}}.</p>
         </div>
         <hr>
       </div>

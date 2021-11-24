@@ -5,6 +5,7 @@
     <div v-else id="input-comment-form">
         <textarea id="add-comment-box" v-model="commentBody" placeholder="Type your comment here..."></textarea>
         <button id="submit-comment" @click="addComment()">Add Comment</button>
+        <button id="submit-comment" @click="clear()">Clear Logged in Database</button>
     </div>
 </div>
 </template>
@@ -23,9 +24,21 @@ export default {
             if(this.$root.$data.user !== '')
             {
                 console.log(`Will add comment as ${this.$root.$data.user}`);
+
+                const d = new Date();
+                let hour = d.getHours();
+                let minutes = d.getMinutes();
+                let amPm = "am";
+                if(hour >= 12) 
+                {
+                    hour = hour - 12;
+                    amPm = 'pm';
+                }
+                let dateString = hour + ':' + minutes + ' ' + amPm + ' ' + ' on ' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear();
+
                 let newComment = {
                     user: this.$root.$data.user,
-                    date: 'today',
+                    date: dateString,
                     comment: '\t' + this.commentBody
                 };
                 //use a post request to add the comment to the comment collection
@@ -47,6 +60,17 @@ export default {
             else
             {
                 console.log("Not logged in!");
+            }
+        },
+        async clear() {
+            try {
+                let loggedIn = await axios.get('api/clear');
+                console.log("logged in:");
+                console.log(loggedIn);
+                await axios.delete('/api/clear');
+            }
+            catch(err) {
+                console.log(err);
             }
         }
     }
