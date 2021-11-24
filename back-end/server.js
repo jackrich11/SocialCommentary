@@ -50,7 +50,10 @@ const loggedInUser = new LoggedIn({
 
 app.get('/api/setup', async (req, res) => {
     try {
+        //let newLogin = new LoggedIn({user: ''});
+        //await newLogin.save();
         let currLoggedIn = await LoggedIn.find();
+        
         console.log("first logged in as:");
         console.log(currLoggedIn);
         res.send(currLoggedIn);
@@ -107,6 +110,27 @@ app.post('/api/comment', async (req,res) => {
     }
 })
 
+app.get('/api/clear', async (req, res) => {
+    try {
+        let loggedIn = await LoggedIn.find();
+        res.send(loggedIn);
+    }
+    catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
+
+app.delete('/api/clear', async (req, res) => {
+    try {
+        await LoggedIn.deleteOne({user: 'jack'});
+        res.sendStatus(200);
+    }
+    catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
 /*app.post('/api/comment', async (req,res) => {
     try {
         let addComment = {
