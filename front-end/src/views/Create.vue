@@ -5,7 +5,6 @@
     <div v-else id="input-comment-form">
         <textarea id="add-comment-box" v-model="commentBody" placeholder="Type your comment here..."></textarea>
         <button id="submit-comment" @click="addComment()">Add Comment</button>
-        <button id="submit-comment" @click="clear()">Clear Logged in Database</button>
     </div>
 </div>
 </template>
