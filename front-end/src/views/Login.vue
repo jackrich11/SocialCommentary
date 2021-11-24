@@ -1,7 +1,7 @@
 <template>
   <div id="posts">
 
-    <div>
+    <div id="login-form">
         <h3>Use the form below to login and see all your comments!</h3>
         <div id="posts">
         <label id="username" for="username-box">Username:</label>
@@ -10,12 +10,24 @@
         <button id="login-button" @click="logout()">Logout</button>
         </div>
     </div>
-    <h4 v-if="this.userComments.length === 0">You don't have any comments. Use the create page to share your thoughts!</h4>
+    <h4 v-if="this.$root.$data.user === ''">Enter your username in the box above to log in!</h4>
+    <h4 v-else-if="this.userComments.length === 0">You don't have any comments. Use the <router-link to="/create">create</router-link> page to share your thoughts!</h4>
     <div v-else id="user-comments-box">
         <h3>Your comments so far:</h3>
-        <ul id="user-comments-list">
-            <li v-for="comment in this.userComments" v-bind:key="comment._id">{{comment.comment}}</li>
-        </ul>
+        <!--<div id="user-comments-div">
+            <ul id="user-comments-list">
+                <li v-for="comment in this.userComments" v-bind:key="comment._id">{{comment.comment}}</li>
+            </ul>
+        </div>-->
+        <div id="posts-list" v-for="comment in this.userComments" v-bind:key="comment._id">
+            <!--<hr v-if="comment._id === commentsList[0]._id">-->
+            <p id="comment-body">{{comment.comment}}</p>
+            <div id="date-delete">
+                <p>Posted by {{comment.user}} at {{comment.date}}.</p>
+            <button @click="deleteComment(comment)" id="delete-button">Delete</button>
+            </div>
+            <!--<hr>-->
+        </div>
     </div>
 
 
@@ -100,6 +112,30 @@ export default {
       catch(err) {
         console.log(err);
       }
+    },
+    async deleteComment(comment)
+    {
+      if(comment.user !== this.$root.$data.user)
+      {
+        alert("You can't delete this comment, it's not yours!");
+      }
+      else
+      {
+        console.log("Will delete the comment that says:");
+        console.log(comment.comment);
+
+        try {
+          console.log("comment id is:");
+          console.log(comment._id);
+          await axios.delete('/api/comment/' + comment._id);
+          this.update();
+        }
+        catch(err) {
+          console.log(err);
+        }
+
+
+      }
     }
   },
   computed: {
@@ -118,7 +154,51 @@ export default {
     color: #7B7B8E !important;
   }
 
+  #user-comments-div {
+      display: flex;
+
+      width: 50%;
+  }
+
   button, input {
       margin-left:  10px;
+  }
+
+  #login-form h3, #login-form h4, h4 {
+      font-size: 150%;
+  }
+
+  #posts-list {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    justify-content: flex-start;
+  }
+
+  #comment-body {
+    font-style: bold;
+    font-size: 170%;
+    overflow-wrap: break-word;
+  }
+
+  #posts-list * {
+    text-align: left;
+  }
+
+  #date-delete {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  #date-delete button {
+    height: 100% !important;
+    margin: auto;
+    font-size: 50%;
+  }
+
+  ul {
+    list-style: none;
   }
 </style>

@@ -1,16 +1,16 @@
 <template>
   <div id="posts">
-    <h3 v-if="this.$root.$data.user === ''">You're not logged in, head to the "Login" tab to do so!</h3>
+    <h3 id="not-logged-in" v-if="this.$root.$data.user === ''">You're not logged in, head to the <router-link id="login" to="/login">login</router-link> tab to do so!</h3>
     <div v-else id="comments-div">
-      <h3>Hey {{this.$root.$data.user}}! Welcome to the info board.</h3>
-      <h4 v-if="this.$root.$data.comments.length === 0">Here's all the posts made so far:</h4>
+      <h1>Hey {{this.$root.$data.user}}! Welcome to the posts page.</h1>
+      <h2 v-if="this.$root.$data.comments.length !== 0">Here's all the posts made so far:</h2>
+      <h3 v-else>There's no posts yet! Head to the <router-link id="create" to="/create">create</router-link> page to get started!</h3>
 
       <div id="posts-list" v-for="comment in commentsList" v-bind:key="comment._id">
         <hr v-if="comment._id === commentsList[0]._id">
-        <h5>{{comment.comment}}</h5>
+        <p id="comment-body">{{comment.comment}}</p>
         <div id="date-delete">
           <p>Posted by {{comment.user}} at {{comment.date}}.</p>
-          <button @click="deleteComment(comment)" id="delete-button">Delete</button>
         </div>
         <hr>
       </div>
@@ -41,35 +41,13 @@ export default {
         console.log("posts function:");
         console.log(comments.data);
         this.commentsList = comments.data;
+        this.$root.$data.comments = this.commentsList;
       }
       catch(err) {
         console.log(err);
       }
     },
-    async deleteComment(comment)
-    {
-      if(comment.user !== this.$root.$data.user)
-      {
-        alert("You can't delete this comment, it's not yours!");
-      }
-      else
-      {
-        console.log("Will delete the comment that says:");
-        console.log(comment.comment);
-
-        try {
-          console.log("comment id is:");
-          console.log(comment._id);
-          await axios.delete('/api/comment/' + comment._id);
-          this.update();
-        }
-        catch(err) {
-          console.log(err);
-        }
-
-
-      }
-    }
+    
   },
   computed: {
     username() {
@@ -83,6 +61,19 @@ export default {
 <style scoped>
   #posts h3, #posts-list *, #comments-div * {
     color: #7B7B8E !important;
+  }
+
+  #not-logged-in {
+    font-size: 170%;
+  }
+
+  #comment-body {
+    font-style: bold;
+    font-size: 170%;
+    overflow-wrap: break-word;
+  }
+
+  #create {
     font-size: 100%;
   }
 
@@ -91,7 +82,7 @@ export default {
     flex-direction: column;
     width: 50%;
     margin: auto;
-    justify-content: start;
+    justify-content: flex-start;
   }
 
   #posts-list * {
@@ -108,6 +99,10 @@ export default {
     height: 100% !important;
     margin: auto;
     font-size: 50%;
+  }
+
+  #login:visited, #create:visited {
+    color: #7B7B8E;
   }
 
   ul {
