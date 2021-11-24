@@ -57,13 +57,18 @@ export default {
 
 
 <style>
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: white;
-  
 }
 
 #header {
@@ -78,6 +83,7 @@ export default {
   flex-direction: column;
   align-content: center;
   justify-content: space-evenly;
+  padding-bottom: 20px;
 }
 
 #header h1 {
@@ -96,5 +102,9 @@ export default {
 
 #nav a.router-link-exact-active {
   color: /*#F4442E*/white;
+}
+
+a:visited {
+  color: white;
 }
 </style>
